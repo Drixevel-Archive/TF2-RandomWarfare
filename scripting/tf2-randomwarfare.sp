@@ -415,12 +415,6 @@ void RandomizePlayer(int client)
 		TF2_SetPlayerClass(client, class, false, false);
 	
 	TF2_RegeneratePlayer(client);
-	TF2_RemoveWeaponSlot(client, TFWeaponSlot_Primary);
-	TF2_RemoveWeaponSlot(client, TFWeaponSlot_Secondary);
-	TF2_RemoveWeaponSlot(client, TFWeaponSlot_Melee);
-
-	SetEntityHealth(client, health);
-	EmitSoundToClient(client, "items/gunpickup2.wav");
 	
 	char sPrimary[64]; //char sPrimaryD[64];
 	int primary = GetRandomWeapon(items, class == TFClass_Spy ? TFWeaponSlot_Secondary : TFWeaponSlot_Primary, class, sPrimary, sizeof(sPrimary));
@@ -430,6 +424,16 @@ void RandomizePlayer(int client)
 	
 	char sMelee[64]; //char sMeleeD[64];
 	int melee = GetRandomWeapon(items, TFWeaponSlot_Melee, class, sMelee, sizeof(sMelee));
+	
+	if (primary == -1 || secondary == -1 || melee == -1)
+		return;
+	
+	TF2_RemoveWeaponSlot(client, TFWeaponSlot_Primary);
+	TF2_RemoveWeaponSlot(client, TFWeaponSlot_Secondary);
+	TF2_RemoveWeaponSlot(client, TFWeaponSlot_Melee);
+
+	SetEntityHealth(client, health);
+	EmitSoundToClient(client, "items/gunpickup2.wav");
 	
 	DataPack pack;
 	CreateDataTimer(0.2, Frame_Equip, pack, TIMER_FLAG_NO_MAPCHANGE);
